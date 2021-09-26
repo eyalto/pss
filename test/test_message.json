@@ -1,0 +1,17 @@
+{
+  "filesReferences": {
+    "files": [
+      {
+        "path": "/Users/eyalto/Downloads/opi/data/zebra_studies_rsna_2019/head/ich/214.1175797171.20042.20642.45270.114383962016289/SERIES_214.474867196.14806.21081.45244.158262738069871/",
+        "baseFolder": "/Users/eyalto/Downloads/opi/data/zebra_studies_rsna_2019/head/ich/214.1175797171.20042.20642.45270.114383962016289/"
+      }
+   ]
+  },
+  "StudyID": "NotUsed",
+  "HashedStudyId": "NotUsed",
+  "Type": "NotUsed",
+  "AlgorithmConfig": {
+    "name": "NotUsed",
+    "version": "NotUsed"
+  }
+}

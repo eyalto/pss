@@ -1,0 +1,28 @@
+Utility class CliWrapper
+
+from CliWrapper import Cli                                                                                                            
+import sys                                                                                                                            
+import logging                                                                                                                        
+                                                                                                                                              
+# using cli
+cli = Cli('ls',logging.getLogger("test"))
+rc, error = cli.run(['-l','-A','-r'],env=None)
+if rc != 0:  # or error is not None
+    print error
+
+
+Out[5]: total 40
+drwxr-xr-x 2 ubuntu ubuntu 4096 Apr 20 13:23 bin
+-rw-r--r-- 1 ubuntu ubuntu  138 Jun 15 20:51 __init__.pyc
+-rw-r--r-- 1 ubuntu ubuntu   17 Jun 18 07:04 __init__.py
+-rw-r--r-- 1 ubuntu ubuntu 5501 Apr 20 14:00 Readme
+-rw-r--r-- 1 ubuntu ubuntu 1897 Jun 30 06:39 CliWrapper.pyc
+-rw-r--r-- 1 ubuntu ubuntu 1896 Jun 18 07:04 CliWrapper.py
+-rw-r--r-- 1 ubuntu ubuntu 7483 Jun 18 07:04 CliAlgorithmWrapper.py 
+drwxr-xr-x 8 ubuntu ubuntu 4096 Jun 30 06:39 .git 
+
+
+
+
+
+

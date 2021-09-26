@@ -1,0 +1,1 @@
+storescp -v -xcr "mv #f #f.dcm" -aet PACS 8080

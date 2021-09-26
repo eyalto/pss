@@ -1,0 +1,16 @@
+{
+    "log" : {
+        "name": "pacs_store_service",
+        "level": "DEBUG"
+    },
+    "pacs": {
+        "host": "localhost",
+        "port": 8080,
+        "aet" : "AEZEBRA",
+        "aec": "PACS"
+    },
+    "rabbit": {
+        "host": "localhost",
+        "queue": "pacsStoreDicomsQueue"
+    }
+}
