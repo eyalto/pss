@@ -1,4 +1,10 @@
 {
+    "api": {
+        "port": 8001
+    },
+    "monitor": {
+        "port": 5080
+    },
     "log" : {
         "name": "pacs_store_service",
         "level": "DEBUG"

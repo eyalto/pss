@@ -1,2 +1,6 @@
 munch
 pika
+prometheus_client
+flask
+flask_restx
+werkzeug
