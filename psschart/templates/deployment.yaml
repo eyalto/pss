@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: PSSCONFIG
-              value: {{ .Values.config.path }}
+              value: {{ .Values.config.path }}/config.json
           ports:
             - name: http
               containerPort: 80

@@ -12,7 +12,7 @@ image:
 
 # deployment configuration values 
 config:
-  path: /etc/pss/config.json
+  path: /etc/pss
 log:
   level: INFO
 api:
