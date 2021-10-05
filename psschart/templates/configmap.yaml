@@ -1,0 +1,43 @@
+apiVersion: v1
+data:
+  config.json: |
+    {
+        "api": {
+            "port": {{ .Values.api.port }}
+        },
+        "monitor": {
+            "port": {{ .Values.monitor.port }}
+        },
+        "log" : {
+            "name": "pacs_store_service",
+            "level": "{{ .Values.log.level }}"
+        },
+        "pacs": {
+            "host": "{{ .Values.pacs.host }}",
+            "port": {{ .Values.pacs.port }},
+            "aet" : "{{ .Values.pacs.aet }}",
+            "aec": "{{ .Values.pacs.aec }}"
+        },
+        "rabbit": {
+            "host": "{{ .Values.rabbit.host }}",
+            "port": {{ .Values.rabbit.port }},
+            "queue": "{{ .Values.rabbit.queue }}"
+        }
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2021-10-05T07:13:59Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:data:
+        .: {}
+        f:config.json: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2021-10-05T07:13:59Z"
+  name: {{ .Release.Name }}-configmap
+  namespace: default
+  resourceVersion: "305791"
+  uid: 7e9cfa4a-b904-4e9b-b590-ed288be6adc8

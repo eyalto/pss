@@ -75,7 +75,8 @@ class MsgApi(Resource):
 
 def rabbitmq_setup():
     global channel
-    connection = pika.BlockingConnection(pika.ConnectionParameters(conf.rabbit.host))
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=conf.rabbit.host, port=conf.rabbit.port))
     channel = connection.channel()
     channel.queue_declare(queue=conf.rabbit.queue)
     return channel

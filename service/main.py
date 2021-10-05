@@ -28,6 +28,7 @@ default_config = {
     },
     "rabbit": {
         "host": "localhost",
+        "port": 5672,
         "queue": "pacsStoreDicomsQueue"
     }
 }
@@ -81,7 +82,8 @@ def store_path_to_pacs(pacs_host, pacs_port, pacs_aetitle, my_aetitle, dicom_pat
         raise(ConnectionError(f"pacs rc:{rc} host:{pacs_host} port:{pacs_port}  msg:{error}"))
 
 def rabbitmq_setup():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(conf.rabbit.host))
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=conf.rabbit.host, port=conf.rabbit.port))
     channel = connection.channel()
     channel.queue_declare(queue=conf.rabbit.queue)
     return channel
@@ -112,7 +114,7 @@ def main():
 
 if __name__ == "__main__":
     # initialize conf
-    conf_filename = os.environ.get('PSSCONFIG') if 'PSSCONFIG' in os.environ else ".pss_conf"
+    conf_filename = os.environ.get('PSSCONFIG') if 'PSSCONFIG' in os.environ else "config.json"
     config = json.load(open(conf_filename)) if os.path.isfile(conf_filename) else default_config
     conf = munch.munchify(config)
     # initialize log

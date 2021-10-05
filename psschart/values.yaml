@@ -10,6 +10,23 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: master
 
+# deployment configuration values 
+log:
+  level: INFO
+api:
+  port: 8001
+monitor:
+  port: 5080
+pacs:
+  host: localhost
+  port: 8080
+  aet: AEZEBRA
+  aec: AEPACS
+rabbit:
+  host: localhost
+  port: 5672
+  queue: pacsStoreDicomsQueue
+
 imagePullSecrets:
   - name: ghcred
 nameOverride: ""
