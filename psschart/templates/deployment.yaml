@@ -33,6 +33,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PSSCONFIG
+              value: {{ .Values.config.path }}
           ports:
             - name: http
               containerPort: 80
@@ -49,7 +52,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config-volume
-              mountPath: /app/
+              mountPath: {{ .Values.config.path }}
       volumes:
         - name: config-volume
           configMap:
