@@ -33,13 +33,20 @@ default_config = {
     }
 }
 
-conf = munch.munchify(default_config)
-logger = logging.getLogger()
+# initialize conf
+conf_filename = os.environ.get('PSSCONFIG') if 'PSSCONFIG' in os.environ else "config.json"
+config = json.load(open(conf_filename)) if os.path.isfile(conf_filename) else default_config
+conf = munch.munchify(config)
+# initialize log
+level = logging.DEBUG if conf.log.level == "DEBUG" else logging.INFO
+logging.basicConfig(level=level, format='%(levelname)s: %(name)s: %(asctime)s %(message)s')
+logger = logging.getLogger(conf.log.name)
+# initialize monitor
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 c_success = Counter('sent_success_counter', 'Success sending counter')
 c_failurs = Counter('sent_failurs_counter', 'Failur sending counter')
 c_msgcount = Counter('message_counter', 'Service overall requests counter')
-
+# global api server
 app = Flask(__name__)
 
 @REQUEST_TIME.time()
@@ -101,25 +108,27 @@ def start_rabbitmq_consumer_thread(channel):
     t.start()
 
 def main():
-    # global process tools:
-    # monitor   
-    start_monitor_server()
+    # monitor
+    try:
+       start_monitor_server()
+    except Exception as e: 
+        logger.warn(f"error initializing prometheus metric serving client: exception msg {str(e)} - exiting.")
+        exit(1)
     # messaging consumer
-    channel = rabbitmq_setup()
-    start_rabbitmq_consumer_thread(channel)
+    try:
+        channel = rabbitmq_setup()
+        start_rabbitmq_consumer_thread(channel)
+    except Exception as e:
+        logger.error(f"failed starting rabbitmq consumer - error {str(e)} - exiting.")
+        exit(1)
     # service api handler
-    api = init_api(conf)
-    api.init_app(app)
-    app.run(port=conf.api.port)
+    try:
+        api = init_api(conf)
+        api.init_app(app)
+        app.run(port=conf.api.port)
+    except Exception as e:
+        logger.error(f"failed initilaizing api server - error {str(e)} - exiting.")
 
 if __name__ == "__main__":
-    # initialize conf
-    conf_filename = os.environ.get('PSSCONFIG') if 'PSSCONFIG' in os.environ else "config.json"
-    config = json.load(open(conf_filename)) if os.path.isfile(conf_filename) else default_config
-    conf = munch.munchify(config)
-    # initialize log
-    level = logging.DEBUG if conf.log.level == "DEBUG" else logging.INFO
-    logging.basicConfig(level=level, format='%(levelname)s: %(name)s: %(asctime)s %(message)s')
-    logger = logging.getLogger(conf.log.name)
     # run everything
     main()
