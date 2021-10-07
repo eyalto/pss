@@ -7,11 +7,18 @@ kubectl create secret docker-registry ghcred --docker-username=eyalto --docker-s
 ### Installation 
 helm install <name of service> psschart
 
+values for the specific deployment can be ovveriden with --set
+  --set pacs.host=<host name/ip of listening pacs>
+  --set pacs.port=<dicom tcp port of listening pacs>
+  --set rabbit.host=<host ip/name of rabbitmq server>
+  --set rabbit.port=<port of rabbitmq server>
+  
 ### Customization and configuration
 
 To change the configuration look at values.yaml 
 Changes in the api/log/monitor/pacs/rabbit keys will be reflected in the configuration map
-The configuration map overrides /app/config.json file 
+The configuration map places the config.json file according to the .Values.config.path direcory and sets the PSSCONFIG environment variable
+  
 In case you would like to use another configuration file it is possible by providing its path as value to PSSCONFIG environment variable
 -- normally for local development just use config.json from the repository 
   
