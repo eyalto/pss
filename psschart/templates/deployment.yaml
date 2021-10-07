@@ -38,15 +38,15 @@ spec:
               value: {{ .Values.config.path }}/config.json
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.api.port }}
               protocol: TCP
           livenessProbe:
             httpGet: 
-              path: /
+              path: /alive
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /ready
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
