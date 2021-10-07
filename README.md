@@ -7,7 +7,8 @@ kubectl create secret docker-registry ghcred --docker-username=eyalto --docker-s
 ### Installation 
 helm install <name of service> psschart
 
-values for the specific deployment can be ovveriden with --set
+values.yaml for the specific deployment can be overriden as follows in the helm install command:
+  
   --set pacs.host=<host name/ip of listening pacs>
   --set pacs.port=<dicom tcp port of listening pacs>
   --set rabbit.host=<host ip/name of rabbitmq server>
