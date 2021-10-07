@@ -41,7 +41,7 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            httpGet:
+            httpGet: 
               path: /
               port: http
           readinessProbe:
@@ -53,10 +53,17 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: {{ .Values.config.path }}
+            - name: data-volume
+              mountPath: {{ .Values.data.internal_path }}
       volumes:
         - name: config-volume
           configMap:
             name: {{ .Release.Name }}-configmap
+        - name: data-volume
+          hostPath:
+            path: {{ .Values.data.external_path }}
+            type: DirectoryOrCreate
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

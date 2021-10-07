@@ -13,6 +13,9 @@ image:
 # deployment configuration values 
 config:
   path: /etc/pss
+data:
+  internal_path: /zebra/data
+  external_path: /zebra/data
 log:
   level: INFO
 api:

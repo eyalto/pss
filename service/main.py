@@ -108,6 +108,7 @@ def start_rabbitmq_consumer_thread(channel):
     t.start()
 
 def main():
+    logger.info(f"main starting with following configuration: {json.dumps(conf,indent=2)}")
     # monitor
     try:
        start_monitor_server()
