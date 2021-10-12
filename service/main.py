@@ -59,7 +59,7 @@ c_msgcount = Counter('message_counter', 'Service overall requests counter')
 
 # global api server
 app = Flask(__name__)
-app.register_blueprint(healthz,"/healthz")
+app.register_blueprint(healthz, url_prefix="/healthz")
 app.config['HEALTHZ']=HEALTHZ
 
 def liveness():
