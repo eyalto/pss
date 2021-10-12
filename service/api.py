@@ -9,7 +9,6 @@ import pika
 
 BACKOFF = 3
 SLEEP_TIMEOUT = 2
-_ready = False
 
 api = Api()
 parser = api.parser()

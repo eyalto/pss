@@ -44,14 +44,14 @@ spec:
             httpGet: 
               path: /healthz/live
               port: http
-              initialDelaySeconds: 5
-              timeoutSeconds: 1
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
           readinessProbe:
             httpGet:
               path: /healthz/ready
               port: http
-              initialDelaySeconds: 5
-              timeoutSeconds: 1
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
