@@ -9,6 +9,7 @@ import pika
 
 BACKOFF = 3
 SLEEP_TIMEOUT = 2
+_ready = False
 
 api = Api()
 parser = api.parser()
@@ -17,16 +18,6 @@ parser.add_argument('host', required=False)
 parser.add_argument('port', required=False, type=int)
 parser.add_argument('aet', required=False)
 parser.add_argument('aec', required=False)
-
-# TODO: check initialized successfully 
-@api.route("/alive")
-def alive_prob():
-    return "OK"
-    
-# TODO: check if channel is up and ready for communication
-@api.route("/ready")
-def ready_prob():
-    return "OK"
 
 @api.route("/pss")
 @api.expect(parser)

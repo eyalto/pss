@@ -42,12 +42,16 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet: 
-              path: /alive
+              path: /healthz/live
               port: http
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
           readinessProbe:
             httpGet:
-              path: /ready
+              path: /healthz/ready
               port: http
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

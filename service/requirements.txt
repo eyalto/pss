@@ -3,4 +3,5 @@ pika
 prometheus_client
 flask
 flask_restx
+flask_healthz
 werkzeug
