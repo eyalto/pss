@@ -3,6 +3,7 @@ import pika
 import logging
 import munch
 import json
+import time
 from api import init_api
 from flask import Flask, request, jsonify
 from flask_healthz import healthz, HealthError
@@ -35,12 +36,25 @@ default_config = {
     }
 }
 
-_alive = False
+# health checks
 _ready = False
+_connection_attempts = 0
+ALIVE_BACKOFF_ATTEMOTS =10
+
 HEALTHZ = {
     "live": "main.liveness",
     "ready": "main.readiness",
 }
+
+def liveness():
+    logger.info("liveness check")
+    if _connection_attempts >= ALIVE_BACKOFF_ATTEMOTS:
+        raise HealthError("Can't connect to the rabbitmq")
+
+def readiness():
+    logger.info("readiness check")
+    if not _ready:
+        raise HealthError("Waiting for rabbitmq become ready")
 
 
 # initialize conf
@@ -61,14 +75,6 @@ c_msgcount = Counter('message_counter', 'Service overall requests counter')
 app = Flask(__name__)
 app.register_blueprint(healthz, url_prefix="/healthz")
 app.config['HEALTHZ']=HEALTHZ
-
-def liveness():
-    logger.info("liveness check")
-    pass
-
-def readiness():
-    logger.info("readiness check")
-    pass
 
 @REQUEST_TIME.time()
 def handle_message(ch, method, properties, msgbody):
@@ -117,9 +123,26 @@ def rabbitmq_setup():
     return channel
 
 def rabbitmq_start(channel):
-    channel.basic_consume(queue=conf.rabbit.queue, on_message_callback=handle_message, auto_ack=True)
-    logging.info("starting to consume messages ... ")
-    channel.start_consuming()
+    global _connection_attempts
+    while not _ready:
+        if channel is None:
+            try:
+                channel = rabbitmq_setup()
+            except:
+                _ready = False
+                channel = None
+        
+        if channel is not None:
+            try:
+                channel.basic_consume(queue=conf.rabbit.queue, on_message_callback=handle_message, auto_ack=True)
+                logging.info("starting to consume messages ... ")
+                _ready = True
+                channel.start_consuming()
+            except:
+                _ready = False
+                channel = None
+                _connection_attempts += 1
+                time.sleep(2)
 
 def start_monitor_server():
     start_http_server(conf.monitor.port)
