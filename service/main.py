@@ -128,7 +128,8 @@ def rabbitmq_start(channel):
         if channel is None:
             try:
                 channel = rabbitmq_setup()
-            except:
+            except Exception as e:
+                logger.warn(f"rabbitmq channel setup error: {str(e)}")
                 _ready = False
                 channel = None
         
@@ -138,10 +139,11 @@ def rabbitmq_start(channel):
                 logging.info("starting to consume messages ... ")
                 _ready = True
                 channel.start_consuming()
-            except:
+            except Exception as e:
                 _ready = False
                 channel = None
                 _connection_attempts += 1
+                logger.warn(f"rabbitmq consumtion error: {str(e)} attempt {str(_connection_attempts)}")
                 time.sleep(2)
 
 def start_monitor_server():
@@ -171,8 +173,7 @@ def main():
         exit(1)
     # messaging consumer
     try:
-        channel = rabbitmq_setup()
-        t = start_rabbitmq_consumer_thread(channel)
+        t = start_rabbitmq_consumer_thread(None)
     except Exception as e:
         logger.error(f"failed starting rabbitmq consumer - error {str(e)} - exiting.")
         exit(1)
