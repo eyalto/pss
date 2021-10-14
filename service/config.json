@@ -18,6 +18,8 @@
     "rabbit": {
         "host": "localhost",
         "port": 5672,
-        "queue": "pacsStoreDicomsQueue"
-    }
+        "queue": "pacsStoreDicomsQueue",
+        "CONNECTION_BACKOFF_ATTEMPTS": 10,
+        "SLEEP_BETWEEN_ATTEMPTS": 5
+    }    
 }

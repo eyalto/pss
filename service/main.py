@@ -32,30 +32,20 @@ default_config = {
     "rabbit": {
         "host": "localhost",
         "port": 5672,
-        "queue": "pacsStoreDicomsQueue"
+        "queue": "pacsStoreDicomsQueue",
+        "CONNECTION_BACKOFF_ATTEMPTS": 10,
+        "SLEEP_BETWEEN_ATTEMPTS": 5
     }
 }
 
 # health checks
 _ready = False
 _connection_attempts = 0
-ALIVE_BACKOFF_ATTEMOTS =10
 
 HEALTHZ = {
     "live": "main.liveness",
     "ready": "main.readiness",
 }
-
-def liveness():
-    logger.info("liveness check")
-    if _connection_attempts >= ALIVE_BACKOFF_ATTEMOTS:
-        raise HealthError("Can't connect to the rabbitmq")
-
-def readiness():
-    logger.info("readiness check")
-    if not _ready:
-        raise HealthError("Waiting for rabbitmq become ready")
-
 
 # initialize conf
 conf_filename = os.environ.get('PSSCONFIG') if 'PSSCONFIG' in os.environ else "config.json"
@@ -70,6 +60,18 @@ REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing requ
 c_success = Counter('sent_success_counter', 'Success sending counter')
 c_failurs = Counter('sent_failurs_counter', 'Failur sending counter')
 c_msgcount = Counter('message_counter', 'Service overall requests counter')
+
+# healthchecks
+def liveness():
+    logger.info("liveness check")
+    if _connection_attempts >= conf.rabbit.CONNECTION_BACKOFF_ATTEMPTS:
+        raise HealthError("Can't connect to the rabbitmq")
+
+def readiness():
+    logger.info("readiness check")
+    if not _ready:
+        raise HealthError("Waiting for rabbitmq become ready")
+
 
 # global api server
 app = Flask(__name__)
@@ -124,27 +126,22 @@ def rabbitmq_setup():
 
 def rabbitmq_start(channel):
     global _connection_attempts
+    global _ready
     while not _ready:
         if channel is None:
             try:
                 channel = rabbitmq_setup()
-            except Exception as e:
-                logger.warn(f"rabbitmq channel setup error: {str(e)}")
-                _ready = False
-                channel = None
-        
-        if channel is not None:
-            try:
                 channel.basic_consume(queue=conf.rabbit.queue, on_message_callback=handle_message, auto_ack=True)
-                logging.info("starting to consume messages ... ")
+                logger.info("starting to consume messages ... ")
                 _ready = True
                 channel.start_consuming()
             except Exception as e:
                 _ready = False
                 channel = None
                 _connection_attempts += 1
-                logger.warn(f"rabbitmq consumtion error: {str(e)} attempt {str(_connection_attempts)}")
-                time.sleep(2)
+                logger.warn(f"rabbitmq error: {str(e)} attempt {str(_connection_attempts)}")
+                logger.warn(f"sleeping before next attempt ...")
+                time.sleep(conf.rabbit.SLEEP_BETWEEN_ATTEMPTS)
 
 def start_monitor_server():
     start_http_server(conf.monitor.port)
@@ -160,7 +157,7 @@ def get_liveliness():
 def excepthook(args):
     global _liveliness
     _liveliness = False
-    logging.info(f"Unhandled exception: type {str(args.exc_type)} thread {str(args.thread)}")
+    logger.info(f"Unhandled exception: type {str(args.exc_type)} thread {str(args.thread)}")
 
 def main():
     logger.info(f"main starting with following configuration: {json.dumps(conf,indent=2)}")

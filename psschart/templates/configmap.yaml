@@ -21,7 +21,10 @@ data:
         "rabbit": {
             "host": "{{ .Values.rabbit.host }}",
             "port": {{ .Values.rabbit.port }},
-            "queue": "{{ .Values.rabbit.queue }}"
+            "queue": "{{ .Values.rabbit.queue }}",
+            "CONNECTION_BACKOFF_ATTEMPTS": "{{ .Values.rabbit.attempts }}",
+            "SLEEP_BETWEEN_ATTEMPTS": "{{ .Values.rabbit.sleep }}"
+
         }
     }
 kind: ConfigMap

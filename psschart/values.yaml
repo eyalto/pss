@@ -31,6 +31,8 @@ rabbit:
   host: host.minikube.internal
   port: 5672
   queue: pacsStoreDicomsQueue
+  attempts: 20
+  sleep: 5
 
 imagePullSecrets:
   - name: ghcred
