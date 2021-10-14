@@ -97,7 +97,7 @@ def handle_message(ch, method, properties, msgbody):
             logger.info(f"successfully stored :{dicom_path.path}")
         except ConnectionError as e:
             logger.info(f"unable to store dicom {dicom_path.path}")
-            logger.warn(f"{str(e)}: error connecting to pacs host:{pacs_host} port {pacs_port}")
+            logger.warning(f"{str(e)}: error connecting to pacs host:{pacs_host} port {pacs_port}")
             c_failurs.inc()
         else:
             c_success.inc()
@@ -139,8 +139,8 @@ def rabbitmq_start(channel):
                 _ready = False
                 channel = None
                 _connection_attempts += 1
-                logger.warn(f"rabbitmq error: {str(e)} attempt {str(_connection_attempts)}")
-                logger.warn(f"sleeping before next attempt ...")
+                logger.warning(f"rabbitmq error: {str(e)} attempt {str(_connection_attempts)}")
+                logger.warning(f"sleeping before next attempt ...")
                 time.sleep(conf.rabbit.SLEEP_BETWEEN_ATTEMPTS)
 
 def start_monitor_server():
@@ -166,7 +166,7 @@ def main():
     try:
        start_monitor_server()
     except Exception as e: 
-        logger.warn(f"error initializing prometheus metric serving client: exception msg {str(e)} - exiting.")
+        logger.warning(f"error initializing prometheus metric serving client: exception msg {str(e)} - exiting.")
         exit(1)
     # messaging consumer
     try:
