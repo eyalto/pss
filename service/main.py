@@ -135,12 +135,19 @@ def rabbitmq_start(channel):
                 logger.info("starting to consume messages ... ")
                 _ready = True
                 channel.start_consuming()
-            except Exception as e:
+            except pika.exceptions.ConnectionClosedByBroker as e:
+                _ready = False
+                channel = None
+                _connection_attempts =0
+                logger.warning(f"rabbitmq error: {str(e)} server disconnected starting connection loop")
+            except (pika.exceptions.StreamLostError,
+                    pika.exceptions.AMQPConnectionError,
+                    pika.exceptions.AMQPChannelError) as e:
                 _ready = False
                 channel = None
                 _connection_attempts += 1
                 logger.warning(f"rabbitmq error: {str(e)} attempt {str(_connection_attempts)}")
-                logger.warning(f"sleeping before next attempt ...")
+                logger.warning(f"sleeping before next connection attempt ...")
                 time.sleep(conf.rabbit.SLEEP_BETWEEN_ATTEMPTS)
 
 def start_monitor_server():
@@ -157,7 +164,10 @@ def get_liveliness():
 def excepthook(args):
     global _liveliness
     _liveliness = False
-    logger.info(f"Unhandled exception: type {str(args.exc_type)} thread {str(args.thread)}")
+    logger.error(f"Unhandled exception: type {str(args.exc_type)} thread {str(args.thread)}")
+    logger.error(f"Unhandled exception: value {str(args.exc_value)}")
+    logger.error(f"Unhandled exception: trace {str(args.exc_traceback)}")
+    
 
 def main():
     logger.info(f"main starting with following configuration: {json.dumps(conf,indent=2)}")
