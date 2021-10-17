@@ -15,10 +15,10 @@ values.yaml for the specific deployment can be overriden as follows in the helm 
   --set pacs.port=<dicom tcp port of listening pacs>
   --set rabbit.host=<host ip/name of rabbitmq server>
   --set rabbit.port=<port of rabbitmq server>
-
 </br> 
 The most important value is mapping the data volume
-  --set data.external_path=<the paht on the host machine that will be mapped to /zebra/data >
+</br>
+  --set data.external_path= "<the paht on the host machine that will be mapped to internal path detault /zebra/data >"
   
 ### Customization and configuration
 
