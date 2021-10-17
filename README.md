@@ -30,7 +30,7 @@ In case you would like to use another configuration file it is possible by provi
   
 ### FileSystem mount
   if you are using minikube make sure that the mount volume is accessible to the system e.g. 
-''' minikube start --mount --mount-string="/data/folder/on/host:/zebe/data" '''
+``` minikube start --mount --mount-string="/data/folder/on/host:/zebe/data" ```
   in this case the data folder will just work with the values.yaml file
   
   
