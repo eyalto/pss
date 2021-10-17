@@ -28,6 +28,11 @@ The configuration map places the config.json file according to the .Values.confi
 In case you would like to use another configuration file it is possible by providing its path as value to PSSCONFIG environment variable
 -- normally for local development just use config.json from the repository 
   
+### FileSystem mount
+  if you are using minikube make sure that the mount volume is accessible to the system e.g. '''minikube start --mount --mount-string="/data/folder/on/host:/zebe/data"'''
+  in this case the data folder will just work with the values.yaml file
+  
+  
 ### Running 
 
   make sure the right hosts and ports are exposed to the running service
