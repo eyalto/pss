@@ -7,6 +7,8 @@ RUN apt -y install  dcmtk
 
 RUN apt install -y python3-pip
 
+RUN apt install -y curl
+
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
