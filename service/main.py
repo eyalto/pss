@@ -43,8 +43,8 @@ _ready = False
 _connection_attempts = 0
 
 HEALTHZ = {
-    "live": "main.liveness",
-    "ready": "main.readiness",
+    "live": f"{__name__}.liveness",
+    "ready": f"{__name__}.readiness",
 }
 
 # initialize conf
