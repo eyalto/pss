@@ -188,7 +188,7 @@ def main():
     try:
         api=init_api(conf)
         api.init_app(app)
-        app.run(port=conf.api.port)
+        app.run(host="0.0.0.0", port=conf.api.port)
     except Exception as e:
         logger.error(f"failed initilaizing api server - error {str(e)} - exiting.")
 
