@@ -10,10 +10,10 @@ CT_PAR is a variable holding the Personal Access Tocken from github
 helm install <name of service> psschart
 
 values.yaml for the specific deployment can be overriden as follows in the helm install command:
-  --set pacs.host=<host name/ip of listening pacs>
-  --set pacs.port=<dicom tcp port of listening pacs>
-  --set rabbit.host=<host ip/name of rabbitmq server>
-  --set rabbit.port=<port of rabbitmq server>
+<br/>--set pacs.host=<host name/ip of listening pacs>
+<br/>--set pacs.port=<dicom tcp port of listening pacs>
+<br/>--set rabbit.host=<host ip/name of rabbitmq server>
+<br/>--set rabbit.port=<port of rabbitmq server>
 <br/><br/>
 The most important value is mapping the data volume
 <br/>
