@@ -4,15 +4,21 @@ a python microservice that consumes rabit queue and executes a storescu cli comm
 ### make sure the image can be pulled from a private repo
 kubectl create secret docker-registry ghcred --docker-username=eyalto --docker-server=ghcr.io --docker-password=$CR_PAT
 
+CT_PAR is a variable holding the Personal Access Tocken from github
+
 ### Installation 
 helm install <name of service> psschart
 
 values.yaml for the specific deployment can be overriden as follows in the helm install command:
-  
+</br>
   --set pacs.host=<host name/ip of listening pacs>
   --set pacs.port=<dicom tcp port of listening pacs>
   --set rabbit.host=<host ip/name of rabbitmq server>
   --set rabbit.port=<port of rabbitmq server>
+
+</br> 
+The most important value is mapping the data volume
+  --set data.external_path=<the paht on the host machine that will be mapped to /zebra/data >
   
 ### Customization and configuration
 
