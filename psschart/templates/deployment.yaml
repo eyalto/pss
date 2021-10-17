@@ -67,7 +67,6 @@ spec:
         - name: data-volume
           hostPath:
             path: {{ .Values.data.external_path }}
-            type: DirectoryOrCreate
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
