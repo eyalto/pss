@@ -39,7 +39,22 @@ In case you would like to use another configuration file it is possible by provi
   make sure the right hosts and ports are exposed to the running service
   api - portmap swagger webservice to make use of the web-api to send files to the pacs storage alternatively use curl
 
+  #### Run examples
+  1. create a rabbitmq docker container and run it locally
+  ``` docker run -d -p 15672:15672 -p 5672:5672 rabbitmq:3-management ```
+  2. create a pacs listener with dcmtk 
+  ``` storescp -v -xcr "mv #f #f.dcm" -aet AEPACS 8080 ```
+  3. start minikube
+  ``` minikube start --mount --mount-string="/data/folder/on/host:/zebe/data" ```
+  4. install helm chart and run
+  ``` helm install mypss ./psschart ```
+  5. port forward and send message though swagger 
+  ``` kubectl port-forward <container name> 8001:8001 ```
+  open the browser on swagger and send a message with dicom file path
+  ``` http://localhost:8001/ ```
+  or 
+  ``` curl --request GET 'http://localhost:8001/pss?files=/zebra/data//pnx_positive/SERIES_214.2838012438.460.21423.44065.180880608466529/47b1d8c7.dcm'  ```
   
 ### Runtime customisation
-  it is possible to add pacs addressing information inside the message to send a dicom to multiple or other pacs systems that are not configured by default
+  it is possible to add pacs addressing information inside the message to send a dicom to a diffenent pacs systems that are not configured (not tested)
 
