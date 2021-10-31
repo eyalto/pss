@@ -105,3 +105,33 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+## Data Persistent Volume Storage Class
+## If defined, storageClassName: <storageClass>
+## If set to "-", storageClassName: "", which disables dynamic provisioning
+## If undefined (the default) or set to null, no storageClassName spec is
+##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+##   GKE, AWS & OpenStack)
+##
+persistence:
+  enabled: true
+  ## A manually managed Persistent Volume and Claim
+  ## If defined, PVC must be created manually before volume will be bound
+  ## The value is evaluated as a template, so, for example, the name can depend on .Release or .Chart
+  ##
+  # existingClaim:
+
+  ## The path the volume will be mounted at
+  ##
+  mountPath: /zebra/data
+
+  storageClass: "manual"
+  ReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  annotations: {}
+
+
+  
