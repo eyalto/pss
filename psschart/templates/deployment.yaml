@@ -65,8 +65,13 @@ spec:
           configMap:
             name: {{ .Release.Name }}-configmap
         - name: data-volume
+        {{ if .Values.persistence.enabled }}        
+          persistentVolumeClaim:
+            claimName: {{ include "psschart.fullname" . }}-claim
+        {{- else if not .Values.persistence.enabled }}
           hostPath:
             path: {{ .Values.data.external_path }}
+        {{- end }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -1,0 +1,17 @@
+{{ if .Values.persistence.enabled }}        
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "psschart.fullname" . }}
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: {{ .Values.persistence.ReclaimPolicy }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  capacity:
+    storage: {{ .Values.persistence.size }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.persistence.mountPath }}
+{{- end }}
